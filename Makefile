@@ -20,7 +20,7 @@ CXXFLAGS += -fPIC -fexceptions
 CPPFLAGS += -DTYPE_DEPENDENT_DISPATCH -DGNUSTEP
 CPPFLAGS += -D__OBJC_RUNTIME_INTERNAL__=1 -D_XOPEN_SOURCE=500 -D__BSD_VISIBLE=1 -D_BSD_SOURCE=1
 
-ASMFLAGS += `if $(CC) -v 2>&1| grep -q 'clang' ; then echo -no-integrated-as ; fi`
+#ASMFLAGS += `if $(CC) -v 2>&1| grep -q 'clang' ; then echo -no-integrated-as ; fi`
 
 THE_LD=`if [ "$(LD)" = "" ]; then echo "ld"; else echo "$(LD)"; fi` 
 
@@ -99,17 +99,17 @@ $(LIBOBJCXX).so.$(VERSION): $(LIBOBJC).so.$(VERSION) $(OBJCXX_OBJECTS)
 	$(SILENT)echo Linking shared Objective-C++ runtime library...
 	$(SILENT)$(CXX) -shared \
             -Wl,-soname=$(LIBOBJCXX).so.$(MAJOR_VERSION) $(LDFLAGS) \
-            -o $@ $(OBJCXX_OBJECTS)
+            -o $@ $(OBJCXX_OBJECTS) -Wl,-Bdynamic,-lcrystax
 
 $(LIBOBJC).so.$(VERSION): $(OBJECTS)
 	$(SILENT)echo Linking shared Objective-C runtime library...
 	$(SILENT)$(CC) -shared -rdynamic \
             -Wl,-soname=$(LIBOBJC).so.$(MAJOR_VERSION) $(LDFLAGS) \
-            -o $@ $(OBJECTS)
+            -o $@ $(OBJECTS) -Wl,-Bdynamic,-lcrystax
 
 $(LIBOBJC).a: $(OBJECTS)
 	$(SILENT)echo Linking static Objective-C runtime library...
-	$(SILENT)$(THE_LD) -r -s -o $@ $(OBJECTS)
+	$(SILENT)$(AR) rcs $@ $(OBJECTS)
 
 .cc.o: Makefile
 	$(SILENT)echo Compiling `basename $<`...

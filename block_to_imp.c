@@ -33,7 +33,9 @@ void __clear_cache(void* start, void* end);
 #include <nbutil.h>
 #endif
 
+#ifndef PAGE_SIZE
 #define PAGE_SIZE 4096
+#endif
 
 static void *executeBuffer;
 static void *writeBuffer;
