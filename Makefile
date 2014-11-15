@@ -49,7 +49,6 @@ OBJECTS = \
 	blocks_runtime.o\
 	block_to_imp.o\
 	block_trampolines.o\
-	objc_msgSend.o\
 	caps.o\
 	category_loader.o\
 	class_table.o\
