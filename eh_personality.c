@@ -24,6 +24,8 @@
 #define __builtin_unreachable abort
 #endif
 
+extern _Unwind_Reason_Code
+    _Unwind_Resume_or_Rethrow(struct _Unwind_Exception *exception_object);
 
 /**
  * Class of exceptions to distinguish between this and other exception types.
