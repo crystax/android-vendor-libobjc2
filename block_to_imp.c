@@ -57,7 +57,7 @@ static void initTmpFile(void)
 }
 static int getAnonMemFd(void)
 {
-	const char *pattern = strdup(tmpPattern);
+	char *pattern = strdup(tmpPattern);
 	int fd = mkstemp(pattern);
 	unlink(pattern);
 	free(pattern);
