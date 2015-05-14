@@ -1,4 +1,7 @@
 #include <stdlib.h>
+#ifdef __ANDROID__
+#include <sys/sysconf.h>
+#endif
 
 void *valloc(size_t);
 
@@ -18,6 +21,11 @@ void *objc_atomic_malloc(size_t size)
 void *objc_valloc(size_t size)
 {
 	return malloc(size);
+}
+#elif defined(__ANDROID__)
+void *objc_valloc(size_t size)
+{
+    return memalign(sysconf(_SC_PAGESIZE),size);
 }
 #else
 void *objc_valloc(size_t size)

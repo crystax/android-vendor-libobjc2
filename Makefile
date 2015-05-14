@@ -14,6 +14,8 @@ LIBOBJCXX=libobjcxx
 INSTALL ?= install
 SILENT ?= @
 
+SYSLIBS = -Wl,-Bstatic,-lgcc -Wl,-Bdynamic -lcrystax -lc -ldl
+
 CFLAGS += -std=gnu99 -fPIC -fexceptions
 #CFLAGS += -Wno-deprecated-objc-isa-usage
 CXXFLAGS += -fPIC -fexceptions
@@ -49,6 +51,7 @@ OBJECTS = \
 	blocks_runtime.o\
 	block_to_imp.o\
 	block_trampolines.o\
+	objc_msgSend.o\
 	caps.o\
 	category_loader.o\
 	class_table.o\
@@ -98,13 +101,13 @@ $(LIBOBJCXX).so: $(LIBOBJC).so $(OBJCXX_OBJECTS)
 	$(SILENT)echo Linking shared Objective-C++ runtime library...
 	$(SILENT)$(CXX) -shared \
             -Wl,-soname=$(LIBOBJCXX).so $(LDFLAGS) \
-            -o $@ $(OBJCXX_OBJECTS) -Wl,-Bdynamic,-lcrystax
+            -o $@ $(OBJCXX_OBJECTS) $(SYSLIBS)
 
 $(LIBOBJC).so: $(OBJECTS)
 	$(SILENT)echo Linking shared Objective-C runtime library...
 	$(SILENT)$(CC) -shared -rdynamic \
             -Wl,-soname=$(LIBOBJC).so $(LDFLAGS) \
-            -o $@ $(OBJECTS) -Wl,-Bdynamic,-lcrystax
+            -o $@ $(OBJECTS) $(SYSLIBS)
 
 $(LIBOBJC).a: $(OBJECTS)
 	$(SILENT)echo Linking static Objective-C runtime library...

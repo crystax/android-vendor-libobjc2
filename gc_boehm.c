@@ -644,11 +644,13 @@ PRIVATE void init_gc(void)
 	//GC_enable_incremental();
 	GC_INIT();
 	char *envValue;
+#if !__ANDROID__
 	// Dump GC stats on exit - uncomment when debugging.
 	if (getenv("LIBOBJC_DUMP_GC_STATUS_ON_EXIT"))
 	{
 		atexit(GC_dump);
 	}
+#endif
 	if ((envValue = getenv("LIBOBJC_LOG_ALLOCATIONS")))
 	{
 		allocationLog = fopen(envValue, "a");
