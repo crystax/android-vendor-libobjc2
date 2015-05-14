@@ -72,7 +72,7 @@ OBJECTS = \
 	toydispatch.o
 
 
-all: warning $(LIBOBJC).a $(LIBOBJCXX).so.$(VERSION)
+all: warning $(LIBOBJC).a $(LIBOBJCXX).so
 	@echo '********************************************************************************'
 	@echo '*********************************** WARNING ************************************'
 	@echo '********************************************************************************'
@@ -94,16 +94,16 @@ warning:
 	@echo cmake .. -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++
 	@echo "make && sudo -E make install"
 
-$(LIBOBJCXX).so.$(VERSION): $(LIBOBJC).so.$(VERSION) $(OBJCXX_OBJECTS)
+$(LIBOBJCXX).so: $(LIBOBJC).so $(OBJCXX_OBJECTS)
 	$(SILENT)echo Linking shared Objective-C++ runtime library...
 	$(SILENT)$(CXX) -shared \
-            -Wl,-soname=$(LIBOBJCXX).so.$(MAJOR_VERSION) $(LDFLAGS) \
+            -Wl,-soname=$(LIBOBJCXX).so $(LDFLAGS) \
             -o $@ $(OBJCXX_OBJECTS) -Wl,-Bdynamic,-lcrystax
 
-$(LIBOBJC).so.$(VERSION): $(OBJECTS)
+$(LIBOBJC).so: $(OBJECTS)
 	$(SILENT)echo Linking shared Objective-C runtime library...
 	$(SILENT)$(CC) -shared -rdynamic \
-            -Wl,-soname=$(LIBOBJC).so.$(MAJOR_VERSION) $(LDFLAGS) \
+            -Wl,-soname=$(LIBOBJC).so $(LDFLAGS) \
             -o $@ $(OBJECTS) -Wl,-Bdynamic,-lcrystax
 
 $(LIBOBJC).a: $(OBJECTS)
@@ -129,16 +129,9 @@ $(LIBOBJC).a: $(OBJECTS)
 $(INSTALL): all
 	$(SILENT)echo Installing libraries...
 	$(SILENT)install -d $(LIB_DIR)
-	$(SILENT)install -m 444 $(STRIP) $(LIBOBJC).so.$(VERSION) $(LIB_DIR)
-	$(SILENT)install -m 444 $(STRIP) $(LIBOBJCXX).so.$(VERSION) $(LIB_DIR)
+	$(SILENT)install -m 444 $(STRIP) $(LIBOBJC).so $(LIB_DIR)
+	$(SILENT)install -m 444 $(STRIP) $(LIBOBJCXX).so $(LIB_DIR)
 	$(SILENT)install -m 444 $(STRIP) $(LIBOBJC).a $(LIB_DIR)
-	$(SILENT)echo Creating symbolic links...
-	$(SILENT)ln -sf $(LIBOBJC).so.$(VERSION) $(LIB_DIR)/$(LIBOBJC).so
-	$(SILENT)ln -sf $(LIBOBJC).so.$(VERSION) $(LIB_DIR)/$(LIBOBJC).so.$(MAJOR_VERSION)
-	$(SILENT)ln -sf $(LIBOBJC).so.$(VERSION) $(LIB_DIR)/$(LIBOBJC).so.$(MAJOR_VERSION).$(MINOR_VERSION)
-	$(SILENT)ln -sf $(LIBOBJCXX).so.$(VERSION) $(LIB_DIR)/$(LIBOBJCXX).so
-	$(SILENT)ln -sf $(LIBOBJCXX).so.$(VERSION) $(LIB_DIR)/$(LIBOBJCXX).so.$(MAJOR_VERSION)
-	$(SILENT)ln -sf $(LIBOBJCXX).so.$(VERSION) $(LIB_DIR)/$(LIBOBJCXX).so.$(MAJOR_VERSION).$(MINOR_VERSION)
 	$(SILENT)echo Installing headers...
 	$(SILENT)install -d $(HEADER_DIR)/objc
 	$(SILENT)install -m 444 objc/*.h $(HEADER_DIR)/objc
@@ -147,6 +140,6 @@ clean:
 	$(SILENT)echo Cleaning...
 	$(SILENT)rm -f $(OBJECTS)
 	$(SILENT)rm -f $(OBJCXX_OBJECTS)
-	$(SILENT)rm -f $(LIBOBJC).so.$(VERSION)
-	$(SILENT)rm -f $(LIBOBJCXX).so.$(VERSION)
+	$(SILENT)rm -f $(LIBOBJC).so
+	$(SILENT)rm -f $(LIBOBJCXX).so
 	$(SILENT)rm -f $(LIBOBJC).a
