@@ -1,3 +1,5 @@
+#include "common.S"
+
 #define DTABLE_OFFSET  32
 #define SMALLOBJ_MASK  1
 #define SHIFT_OFFSET   4
@@ -103,3 +105,7 @@ CDECL(objc_msgSend_stret):
 LSmallIntClass:
 	.long   SmallObjectClasses
 	.align  2
+
+#ifdef __ELF__
+.section .note.GNU-stack,"",%progbits
+#endif

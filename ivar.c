@@ -29,7 +29,9 @@ PRIVATE void objc_compute_ivar_offsets(Class class)
 			}
 			ivar_start = super->instance_size;
 		}
+#if 0
 		long class_size = 0 - class->instance_size;
+#endif
 		class->instance_size = ivar_start - class->instance_size;
 		/* For each instance variable, we add the offset if required (it will be zero
 		* if this class is compiled with a static ivar layout).  We then set the
@@ -51,10 +53,10 @@ PRIVATE void objc_compute_ivar_offsets(Class class)
 				// in front of the object.  This doesn't matter for aligment most of
 				// the time, but if we have an instance variable that is a vector type
 				// then we will need to ensure that we are properly aligned again.
+#if 0
 				long ivar_size = (i+1 == class->ivars->count)
 					? (class_size - ivar->offset)
 					: ivar->offset - class->ivars->ivar_list[i+1].offset;
-#if 0
 				// We only need to do the realignment for things that are
 				// bigger than a pointer, and we don't need to do it in GC mode
 				// where we don't add any extra padding.

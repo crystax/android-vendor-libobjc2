@@ -8,11 +8,13 @@
 #define BUFFER_SIZE 128
 static BUFFER_TYPE *buffered_object_buffer[BUFFER_SIZE];
 static BUFFER_TYPE **buffered_object_overflow;
-static int buffered_objects;
-static int buffered_object_overflow_space;
+static unsigned int buffered_objects;
+static unsigned int buffered_object_overflow_space;
 
 static void set_buffered_object_at_index(BUFFER_TYPE *cat, unsigned int i)
 {
+	BUFFER_TYPE **ptr;
+
 	if (i < BUFFER_SIZE)
 	{
 		buffered_object_buffer[i] = cat;
@@ -29,8 +31,11 @@ static void set_buffered_object_at_index(BUFFER_TYPE *cat, unsigned int i)
 		while (i >= buffered_object_overflow_space)
 		{
 			buffered_object_overflow_space <<= 1;
-			buffered_object_overflow = realloc(buffered_object_overflow,
+			ptr = realloc(buffered_object_overflow,
 					buffered_object_overflow_space * sizeof(BUFFER_TYPE*));
+			if (!ptr)
+				free(buffered_object_overflow);
+			buffered_object_overflow = ptr;
 		}
 		buffered_object_overflow[i] = cat;
 	}

@@ -90,7 +90,7 @@ static void collectMethodsForMethodListToSparseArray(
 	{
 		collectMethodsForMethodListToSparseArray(list->next, sarray, YES);
 	}
-	for (unsigned i=0 ; i<list->count ; i++)
+	for (int i=0 ; i<list->count ; i++)
 	{
 		SparseArrayInsert(sarray, list->methods[i].selector->index,
 				(void*)&list->methods[i]);
@@ -440,6 +440,8 @@ int objc_registerTracingHook(SEL aSel, objc_tracing_hook aHook)
 	SparseArrayInsert(tracing_dtable, aSel->index, aHook);
 	return 0;
 #else
+	(void)aSel;
+	(void)aHook;
 	return ENOTSUP;
 #endif
 }
@@ -450,6 +452,7 @@ static BOOL installMethodInDtable(Class class,
                                   struct objc_method *method,
                                   BOOL replaceExisting)
 {
+	(void)class;
 	ASSERT(uninstalled_dtable != dtable);
 	uint32_t sel_id = method->selector->index;
 	struct objc_slot *slot = SparseArrayLookup(dtable, sel_id);
@@ -620,7 +623,7 @@ static dtable_t create_dtable_for_class(Class class, dtable_t root_dtable)
 
 	while (NULL != list)
 	{
-		for (unsigned i=0 ; i<list->count ; i++)
+		for (int i=0 ; i<list->count ; i++)
 		{
 			installMethodInDtable(class, class, dtable, &list->methods[i], NO);
 		}
@@ -667,6 +670,7 @@ PRIVATE void objc_resize_dtables(uint32_t newSize)
 
 PRIVATE dtable_t objc_copy_dtable_for_class(dtable_t old, Class cls)
 {
+	(void)cls;
 	return SparseArrayCopy(old);
 }
 

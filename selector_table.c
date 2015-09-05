@@ -577,6 +577,7 @@ PRIVATE void objc_register_selectors_from_class(Class class)
 }
 PRIVATE void objc_register_selector_array(SEL selectors, unsigned long count)
 {
+	(void)count;
 	// GCC is broken and always sets the count to 0, so we ignore count until
 	// we can throw stupid and buggy compilers in the bin.
 	for (unsigned long i=0 ;  (NULL != selectors[i].name) ; i++)

@@ -486,7 +486,7 @@ static uint32_t ptr_hash(const void *ptr)
 	// always be 0, which is not so useful for a hash value
 	return ((uintptr_t)ptr >> 4) | ((uintptr_t)ptr << ((sizeof(id) * 8) - 4));
 }
-static int weak_ref_hash(const WeakRef weak_ref)
+static uint32_t weak_ref_hash(const WeakRef weak_ref)
 {
 	return ptr_hash(weak_ref.obj);
 }
@@ -605,7 +605,7 @@ id objc_storeWeak(id *addr, id obj)
 		}
 		else
 		{
-			WeakRef newRef = {0};
+			WeakRef newRef = {.obj = 0, .ref = {0}, .next = 0};
 			newRef.obj = obj;
 			newRef.ref[0] = addr;
 			weak_ref_insert(weakRefs, newRef);

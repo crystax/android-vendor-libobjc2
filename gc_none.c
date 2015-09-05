@@ -40,6 +40,7 @@ PRIVATE BOOL isGCEnabled = NO;
 #ifndef ENABLE_GC
 PRIVATE void enableGC(BOOL exclusive)
 {
+	(void)exclusive;
 	fprintf(stderr, "Attempting to enable garbage collection, but your"
 			"Objective-C runtime was built without garbage collection"
 			"support\n");
@@ -47,9 +48,21 @@ PRIVATE void enableGC(BOOL exclusive)
 }
 #endif
 
-void objc_set_collection_threshold(size_t threshold) {}
-void objc_set_collection_ratio(size_t ratio) {}
-void objc_collect(unsigned long options) {}
+void objc_set_collection_threshold(size_t threshold)
+{
+	(void)threshold;
+}
+
+void objc_set_collection_ratio(size_t ratio)
+{
+	(void)ratio;
+}
+
+void objc_collect(unsigned long options)
+{
+	(void)options;
+}
+
 BOOL objc_collectingEnabled(void) { return NO; }
 BOOL objc_atomicCompareAndSwapPtr(id predicate, id replacement, volatile id *objectLocation)
 {
@@ -115,6 +128,19 @@ id objc_allocate_object(Class cls, int extra)
 
 BOOL objc_collecting_enabled(void) { return NO; }
 void objc_startCollectorThread(void) {}
-void objc_clear_stack(unsigned long options) {}
-BOOL objc_is_finalized(void *ptr) { return NO; }
-void objc_finalizeOnMainThread(Class cls) {}
+
+void objc_clear_stack(unsigned long options)
+{
+	(void)options;
+}
+
+BOOL objc_is_finalized(void *ptr)
+{
+	(void)ptr;
+	return NO;
+}
+
+void objc_finalizeOnMainThread(Class cls)
+{
+	(void)cls;
+}

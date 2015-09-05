@@ -219,7 +219,7 @@ Ivar * class_copyIvarList(Class cls, unsigned int *outCount)
 	CHECK_ARG(cls);
 	struct objc_ivar_list *ivarlist = NULL;
 	unsigned int count = 0;
-	unsigned int index;
+	int index;
 	Ivar *list;
 
 	if (Nil != cls)
@@ -278,7 +278,7 @@ Method * class_copyMethodList(Class cls, unsigned int *outCount)
 	count = 0;
 	for (methods = cls->methods; methods != NULL; methods = methods->next)
 	{
-		unsigned int	index;
+		int	index;
 		for (index = 0; index < methods->count; index++)
 		{
 			list[count++] = &methods->methods[index];
@@ -464,6 +464,7 @@ int class_getVersion(Class theClass)
 
 const char *class_getWeakIvarLayout(Class cls)
 {
+	(void)cls;
 	assert(0 && "Weak ivars not supported");
 	return NULL;
 }
@@ -525,6 +526,8 @@ void class_setVersion(Class theClass, int version)
 
 void class_setWeakIvarLayout(Class cls, const char *layout)
 {
+	(void)cls;
+	(void)layout;
 	assert(0 && "Not implemented");
 }
 

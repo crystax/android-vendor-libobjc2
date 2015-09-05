@@ -2,9 +2,9 @@
  * Stub declaration of NSObject.  Lots of things in the runtime require the 
  */
 @interface NSObject
--retain;
--copy;
+-(id)retain;
+-(id)copy;
 -(void)release;
--autorelease;
+-(id)autorelease;
 -(void)dealloc;
 @end

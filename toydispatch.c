@@ -206,6 +206,8 @@ static void *runloop(void *q)
 dispatch_queue_t dispatch_queue_create(const char *label,
 		void *attr)
 {
+	(void)label;
+	(void)attr;
 	dispatch_queue_t queue = calloc(1, sizeof(struct dispatch_queue));
 	queue->refcount = 1;
 	pthread_cond_init(&queue->conditionVariable, NULL);

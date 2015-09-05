@@ -123,7 +123,7 @@ gnustep::libobjc::__objc_class_type_info::~__objc_class_type_info() {}
 gnustep::libobjc::__objc_id_type_info::~__objc_id_type_info() {}
 bool gnustep::libobjc::__objc_class_type_info::__do_catch(const type_info *thrownType,
                                                           void **obj,
-                                                          unsigned outer) const
+                                                          unsigned /*outer*/) const
 {
 	id thrown = (id)obj;
 	bool found = false;
@@ -157,7 +157,7 @@ bool gnustep::libobjc::__objc_class_type_info::__do_catch(const type_info *throw
 
 bool gnustep::libobjc::__objc_id_type_info::__do_catch(const type_info *thrownType,
                                                        void **obj,
-                                                       unsigned outer) const
+                                                       unsigned /*outer*/) const
 {
 	// Id catch matches any ObjC throw
 	if (dynamic_cast<const __objc_class_type_info*>(thrownType))
@@ -187,7 +187,7 @@ gnustep::libobjc::__objc_id_type_info __objc_id_type_info;
  * Exception cleanup function for C++ exceptions that wrap Objective-C
  * exceptions.
  */
-static void exception_cleanup(_Unwind_Reason_Code reason,
+static void exception_cleanup(_Unwind_Reason_Code /*reason*/,
                               struct _Unwind_Exception *ex)
 {
 	__cxa_exception *cxxex = (__cxa_exception*) ((char*)ex - offsetof(struct __cxa_exception, unwindHeader));

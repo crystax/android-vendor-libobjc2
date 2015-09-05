@@ -238,6 +238,7 @@ static inline Class initHiddenClassForObject(id obj)
 
 static void deallocHiddenClass(id obj, SEL _cmd)
 {
+	(void)_cmd;
 	Class hiddenClass = findHiddenClass(obj);
 	// After calling [super dealloc], the object will no longer exist.
 	// Free the hidden

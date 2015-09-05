@@ -24,6 +24,7 @@ static inline BOOL checkAttribute(char field, int attr)
  */
 id objc_getProperty(id obj, SEL _cmd, ptrdiff_t offset, BOOL isAtomic)
 {
+	(void)_cmd;
 	if (nil == obj) { return nil; }
 	char *addr = (char*)obj;
 	addr += offset;
@@ -51,6 +52,7 @@ id objc_getProperty(id obj, SEL _cmd, ptrdiff_t offset, BOOL isAtomic)
 
 void objc_setProperty(id obj, SEL _cmd, ptrdiff_t offset, id arg, BOOL isAtomic, BOOL isCopy)
 {
+	(void)_cmd;
 	if (nil == obj) { return; }
 	char *addr = (char*)obj;
 	addr += offset;
@@ -91,6 +93,7 @@ void objc_setProperty(id obj, SEL _cmd, ptrdiff_t offset, id arg, BOOL isAtomic,
 
 void objc_setProperty_atomic(id obj, SEL _cmd, id arg, ptrdiff_t offset)
 {
+	(void)_cmd;
 	char *addr = (char*)obj;
 	addr += offset;
 	arg = objc_retain(arg);
@@ -104,6 +107,7 @@ void objc_setProperty_atomic(id obj, SEL _cmd, id arg, ptrdiff_t offset)
 
 void objc_setProperty_atomic_copy(id obj, SEL _cmd, id arg, ptrdiff_t offset)
 {
+	(void)_cmd;
 	char *addr = (char*)obj;
 	addr += offset;
 
@@ -118,6 +122,7 @@ void objc_setProperty_atomic_copy(id obj, SEL _cmd, id arg, ptrdiff_t offset)
 
 void objc_setProperty_nonatomic(id obj, SEL _cmd, id arg, ptrdiff_t offset)
 {
+	(void)_cmd;
 	char *addr = (char*)obj;
 	addr += offset;
 	arg = objc_retain(arg);
@@ -128,6 +133,7 @@ void objc_setProperty_nonatomic(id obj, SEL _cmd, id arg, ptrdiff_t offset)
 
 void objc_setProperty_nonatomic_copy(id obj, SEL _cmd, id arg, ptrdiff_t offset)
 {
+	(void)_cmd;
 	char *addr = (char*)obj;
 	addr += offset;
 	id old = *(id*)addr;
@@ -178,6 +184,7 @@ void objc_copyPropertyStruct(void *dest,
                              BOOL atomic,
                              BOOL strong)
 {
+	(void)strong;
 	if (atomic)
 	{
 		volatile int *lock = lock_for_pointer(src < dest ? src : dest);
@@ -204,6 +211,7 @@ void objc_getPropertyStruct(void *dest,
                             BOOL atomic,
                             BOOL strong)
 {
+	(void)strong;
 	if (atomic)
 	{
 		volatile int *lock = lock_for_pointer(src);
@@ -227,6 +235,7 @@ void objc_setPropertyStruct(void *dest,
                             BOOL atomic,
                             BOOL strong)
 {
+	(void)strong;
 	if (atomic)
 	{
 		volatile int *lock = lock_for_pointer(dest);
@@ -584,7 +593,8 @@ PRIVATE struct objc_property propertyFromAttrs(const objc_property_attribute_t *
                                                unsigned int attributeCount,
                                                const char **name)
 {
-	struct objc_property p = { 0 };
+	struct objc_property p;
+	memset(&p, 0, sizeof(p));
 	for (unsigned int i=0 ; i<attributeCount ; i++)
 	{
 		switch (attributes[i].name[0])

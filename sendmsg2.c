@@ -9,23 +9,57 @@
 
 void objc_send_initialize(id object);
 
-static long long nil_method(id self, SEL _cmd) { return 0; }
-static long double nil_method_D(id self, SEL _cmd) { return 0; }
-static double nil_method_d(id self, SEL _cmd) { return 0; }
-static float nil_method_f(id self, SEL _cmd) { return 0; }
+static long long nil_method(id self, SEL _cmd)
+{
+	(void)self;
+	(void)_cmd;
+	return 0;
+}
 
-static struct objc_slot nil_slot = { Nil, Nil, 0, 1, (IMP)nil_method };
-static struct objc_slot nil_slot_D = { Nil, Nil, 0, 1, (IMP)nil_method_D };
-static struct objc_slot nil_slot_d = { Nil, Nil, 0, 1, (IMP)nil_method_d };
-static struct objc_slot nil_slot_f = { Nil, Nil, 0, 1, (IMP)nil_method_f };
+static long double nil_method_D(id self, SEL _cmd)
+{
+	(void)self;
+	(void)_cmd;
+	return 0;
+}
+
+static double nil_method_d(id self, SEL _cmd)
+{
+	(void)self;
+	(void)_cmd;
+	return 0;
+}
+
+static float nil_method_f(id self, SEL _cmd)
+{
+	(void)self;
+	(void)_cmd;
+	return 0;
+}
+
+static struct objc_slot nil_slot   = { .owner = Nil, .cachedFor = Nil, .types = 0, .version = 1, .method = (IMP)nil_method,   .selector = 0 };
+static struct objc_slot nil_slot_D = { .owner = Nil, .cachedFor = Nil, .types = 0, .version = 1, .method = (IMP)nil_method_D, .selector = 0 };
+static struct objc_slot nil_slot_d = { .owner = Nil, .cachedFor = Nil, .types = 0, .version = 1, .method = (IMP)nil_method_d, .selector = 0 };
+static struct objc_slot nil_slot_f = { .owner = Nil, .cachedFor = Nil, .types = 0, .version = 1, .method = (IMP)nil_method_f, .selector = 0 };
 
 typedef struct objc_slot *Slot_t;
 
 Slot_t objc_msg_lookup_sender(id *receiver, SEL selector, id sender);
 
 // Default implementations of the two new hooks.  Return NULL.
-static id objc_proxy_lookup_null(id receiver, SEL op) { return nil; }
-static Slot_t objc_msg_forward3_null(id receiver, SEL op) { return &nil_slot; }
+static id objc_proxy_lookup_null(id receiver, SEL op)
+{
+	(void)receiver;
+	(void)op;
+	return nil;
+}
+
+static Slot_t objc_msg_forward3_null(id receiver, SEL op)
+{
+	(void)receiver;
+	(void)op;
+	return &nil_slot;
+}
 
 id (*objc_proxy_lookup)(id receiver, SEL op) = objc_proxy_lookup_null;
 Slot_t (*__objc_msg_forward3)(id receiver, SEL op) = objc_msg_forward3_null;
@@ -47,6 +81,9 @@ static struct objc_slot* objc_selector_type_mismatch(Class cls, SEL
 static struct objc_slot* objc_selector_type_mismatch(Class cls, SEL
 		selector, Slot_t result)
 {
+	(void)cls;
+	(void)selector;
+	(void)result;
 	return result;
 }
 #endif
@@ -283,6 +320,7 @@ void objc_profile_write_symbols(char **symbols)
 void objc_msg_profile(id receiver, IMP method,
                       const char *module, int32_t callsite)
 {
+	(void)receiver;
 	// Initialize the logging lazily.  This prevents us from wasting any memory
 	// when we are not profiling.
 	if (NULL == profileData)

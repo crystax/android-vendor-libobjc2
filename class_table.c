@@ -23,9 +23,9 @@ static int imp_compare(const void *i1, void *i2)
 {
 	return i1 == i2;
 }
-static int32_t imp_hash(const void *imp)
+static uint32_t imp_hash(const void *imp)
 {
-	return (int32_t)(((uintptr_t)imp) >> 4);
+	return (uint32_t)(((uintptr_t)imp) >> 4);
 }
 #define MAP_TABLE_NAME load_messages
 #define MAP_TABLE_COMPARE_FUNCTION imp_compare
@@ -70,7 +70,7 @@ static int class_compare(const char *name, const Class class)
 {
 	return string_compare(name, class->name);
 }
-static int class_hash(const Class class)
+static uint32_t class_hash(const Class class)
 {
 	return string_hash(class->name);
 }
@@ -550,6 +550,8 @@ Class objc_next_class(void **enum_state)
 
 Class class_pose_as(Class impostor, Class super_class)
 {
+	(void)impostor;
+	(void)super_class;
 	fprintf(stderr, "Class posing is no longer supported.\n");
 	fprintf(stderr, "Please use class_replaceMethod() instead.\n");
 	abort();

@@ -17,7 +17,18 @@ struct objc_method_description_list
 
 
 #ifdef __OBJC__
+
+#ifdef __clang__
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wobjc-root-class"
+#endif
+
 @interface Object { id isa; } @end
+
+#ifdef __clang__
+#pragma clang diagnostic pop
+#endif
+
 /**
  * Definition of the Protocol type.  Protocols are objects, but are rarely used
  * as such.

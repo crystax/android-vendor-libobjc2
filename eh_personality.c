@@ -92,11 +92,14 @@ static void saveLandingPad(struct _Unwind_Context *context,
                            dw_eh_ptr_t landingPad)
 {
 #ifdef __arm__
+	(void)ex;
 	// On ARM, we store the saved exception in the generic part of the structure
 	ucb->barrier_cache.sp = _Unwind_GetGR(context, 13);
 	ucb->barrier_cache.bitpattern[1] = (uint32_t)selector;
 	ucb->barrier_cache.bitpattern[3] = (uint32_t)landingPad;
 #else
+	(void)context;
+	(void)ucb;
 	// Cache the results for the phase 2 unwind, if we found a handler
 	// and this is not a foreign exception.  We can't cache foreign exceptions
 	// because we don't know their structure (although we could cache C++
@@ -118,11 +121,14 @@ static int loadLandingPad(struct _Unwind_Context *context,
                           unsigned long *selector,
                           dw_eh_ptr_t *landingPad)
 {
+	(void)context;
 #ifdef __arm__
+	(void)ex;
 	*selector = ucb->barrier_cache.bitpattern[1];
 	*landingPad = (dw_eh_ptr_t)ucb->barrier_cache.bitpattern[3];
 	return 1;
 #else
+	(void)ucb;
 	if (ex)
 	{
 		*selector = ex->handlerSwitchValue;
@@ -138,19 +144,24 @@ static inline _Unwind_Reason_Code continueUnwinding(struct _Unwind_Exception *ex
 {
 #ifdef __arm__
 	if (__gnu_unwind_frame(ex, context) != _URC_OK) { return _URC_FAILURE; }
+#else
+	(void)ex;
+	(void)context;
 #endif
 	return _URC_CONTINUE_UNWIND;
 }
 
 static void cleanup(_Unwind_Reason_Code reason, struct _Unwind_Exception *e)
 {
-	/*
+	(void)reason;
+	(void)e;
+#if 0
   if (header->exceptionDestructor)
 		  header->exceptionDestructor (e + 1);
 
 	free((struct objc_exception*) ((char*)e - offsetof(struct objc_exception,
 					unwindHeader)));
-					*/
+#endif
 }
 /**
  * Throws an Objective-C exception.  This function is, unfortunately, used for
@@ -377,7 +388,7 @@ static inline _Unwind_Reason_Code internal_objc_personality(int version,
 	}
 
 	// These two variables define how the exception will be handled.
-	struct dwarf_eh_action action = {0};
+	struct dwarf_eh_action action = {.landing_pad = 0, .action_record = 0};
 	unsigned long selector = 0;
 	
 	if (actions & _UA_SEARCH_PHASE)
@@ -537,7 +548,10 @@ static __thread struct thread_data thread_data;
 #else
 void clean_tls(void *td)
 {
+	(void)td;
+#if 0
 	struct thread_data *data = td;
+#endif
 }
 
 static pthread_key_t key;

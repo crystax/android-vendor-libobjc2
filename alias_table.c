@@ -44,7 +44,7 @@ static int alias_compare(const char *name, const Alias alias)
 	return string_compare(name, alias.name);
 }
 
-static int alias_hash(const Alias alias)
+static uint32_t alias_hash(const Alias alias)
 {
 	return string_hash(alias.name);
 }

@@ -123,6 +123,7 @@ struct PREFIX(_table_cell_struct) *PREFIX(alloc_cells)(PREFIX(_table) *table, in
 	return GC_CALLOC_EXPLICITLY_TYPED(count,
 			sizeof(struct PREFIX(_table_cell_struct)), table->descr);
 #	else
+	(void)table;
 	return CALLOC(count, sizeof(struct PREFIX(_table_cell_struct)));
 #	endif
 }
@@ -515,6 +516,7 @@ static MAP_TABLE_VALUE_TYPE
 PREFIX(_current)(PREFIX(_table) *table,
                     struct PREFIX(_table_enumerator) **state)
 {
+    (void)table;
 #ifdef MAP_TABLE_ACCESS_BY_REFERENCE
 	return &(*state)->table->table[(*state)->index].value;
 #else

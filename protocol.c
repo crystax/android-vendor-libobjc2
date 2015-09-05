@@ -16,7 +16,7 @@ static int protocol_compare(const char *name,
 {
 	return string_compare(name, protocol->name);
 }
-static int protocol_hash(const struct objc_protocol2 *protocol)
+static uint32_t protocol_hash(const struct objc_protocol2 *protocol)
 {
 	return string_hash(protocol->name);
 }
@@ -230,7 +230,7 @@ BOOL protocol_conformsToProtocol(Protocol *p1, Protocol *p2)
 	for (struct objc_protocol_list *list = p1->protocol_list ;
 		list != NULL ; list = list->next)
 	{
-		for (int i=0 ; i<list->count ; i++)
+		for (size_t i=0 ; i<list->count ; i++)
 		{
 			if (strcmp(list->list[i]->name, p2->name) == 0)
 			{
@@ -253,7 +253,7 @@ BOOL class_conformsToProtocol(Class cls, Protocol *protocol)
 		for (struct objc_protocol_list *protocols = cls->protocols;
 			protocols != NULL ; protocols = protocols->next)
 		{
-			for (int i=0 ; i<protocols->count ; i++)
+			for (size_t i=0 ; i<protocols->count ; i++)
 			{
 				Protocol *p1 = (Protocol*)protocols->list[i];
 				if (protocol_conformsToProtocol(p1, protocol))
@@ -338,7 +338,7 @@ Protocol*__unsafe_unretained* protocol_copyProtocolList(Protocol *p, unsigned in
 
 	*count  = p->protocol_list->count;
 	Protocol **out = calloc(sizeof(Protocol*), p->protocol_list->count);
-	for (int i=0 ; i<p->protocol_list->count ; i++)
+	for (size_t i=0 ; i<p->protocol_list->count ; i++)
 	{
 		out[i] = (Protocol*)p->protocol_list->list[i];
 	}

@@ -29,10 +29,12 @@ void objc_send_load_message(Class class);
 
 void log_selector_memory_usage(void);
 
+#if !__ANDROID__
 static void log_memory_stats(void)
 {
 	log_selector_memory_usage();
 }
+#endif /* !__ANDROID__ */
 
 /* Number of threads that are alive.  */
 int __objc_runtime_threads_alive = 1;			/* !T:MUTEX */

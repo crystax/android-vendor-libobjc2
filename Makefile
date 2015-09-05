@@ -2,11 +2,6 @@
 
 .SUFFIXES: .cc .c .m .o .S
 
-MAJOR_VERSION = 4
-MINOR_VERSION = 6
-SUBMINOR_VERSION = 0
-VERSION ?= $(MAJOR_VERSION).$(MINOR_VERSION).$(SUBMINOR_VERSION)
-
 LIBOBJCLIBNAME=objc
 LIBOBJC=libobjc
 LIBOBJCXX=libobjcxx
@@ -16,23 +11,28 @@ SILENT ?= @
 
 SYSLIBS = -Wl,-Bstatic,-lgcc -Wl,-Bdynamic -lcrystax -lc -ldl
 
-CFLAGS += -std=gnu99 -fPIC -fexceptions
-#CFLAGS += -Wno-deprecated-objc-isa-usage
-CXXFLAGS += -fPIC -fexceptions
-CPPFLAGS += -DTYPE_DEPENDENT_DISPATCH -DGNUSTEP
-CPPFLAGS += -D__OBJC_RUNTIME_INTERNAL__=1 -D_XOPEN_SOURCE=500 -D__BSD_VISIBLE=1 -D_BSD_SOURCE=1
+WFLAGS = -Wall -Wextra -Werror
+WFLAGS += -Wno-deprecated-objc-isa-usage
 
-#ASMFLAGS += `if $(CC) -v 2>&1| grep -q 'clang' ; then echo -no-integrated-as ; fi`
-
-THE_LD=`if [ "$(LD)" = "" ]; then echo "ld"; else echo "$(LD)"; fi` 
-
-STRIP=`if [ "$(strip)" = "yes" ] ; then echo -s ; fi`
+override CFLAGS += -std=gnu99 -fPIC -fexceptions $(WFLAGS)
+override CXXFLAGS += -fPIC -fexceptions $(WFLAGS)
+override CPPFLAGS += -DTYPE_DEPENDENT_DISPATCH -DGNUSTEP
+override CPPFLAGS += -D__OBJC_RUNTIME_INTERNAL__=1 -D_XOPEN_SOURCE=500 -D__BSD_VISIBLE=1 -D_BSD_SOURCE=1
 
 # Suppress warnings about incorrect selectors
-CPPFLAGS += -DNO_SELECTOR_MISMATCH_WARNINGS
+override CPPFLAGS += -DNO_SELECTOR_MISMATCH_WARNINGS
 # Some helpful flags for debugging.
-#CPPFLAGS += -g -O0 -fno-inline
-CPPFLAGS += -O3
+#override CPPFLAGS += -g -O0 -fno-inline
+override CPPFLAGS += -O3 -g
+
+override OBJCFLAGS += -fobjc-exceptions
+
+ifeq (1,$(shell echo __clang__ | $(CC) -x c -E - | grep -v '^\#'))
+override CFLAGS += -fno-integrated-as
+override CXXFLAGS += -fno-integrated-as
+override ASMFLAGS += -fno-integrated-as
+override OBJCFLAGS += -fintegrated-as
+endif
 
 PREFIX?= /usr/local
 LIB_DIR= ${PREFIX}/lib
@@ -51,7 +51,6 @@ OBJECTS = \
 	blocks_runtime.o\
 	block_to_imp.o\
 	block_trampolines.o\
-	objc_msgSend.o\
 	caps.o\
 	category_loader.o\
 	class_table.o\
@@ -74,17 +73,22 @@ OBJECTS = \
 	statics_loader.o\
 	toydispatch.o
 
+define add-objc_msgSend-implementation
+OBJECTS += $$(if $$(filter 1,$$(shell echo $(1) | $$(CC) -x c -E - | grep -v '^\#')),objc_msgSend.$(2).o)
+endef
 
-all: warning $(LIBOBJC).a $(LIBOBJCXX).so
-	@echo '********************************************************************************'
-	@echo '*********************************** WARNING ************************************'
-	@echo '********************************************************************************'
-	@echo The Makfile build is deprecated, and should not be used.
-	@echo Please use cmake.  The recommended procedure is:
-	@echo $ mkdir Build
-	@echo $ cd Build
-	@echo cmake .. -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++
-	@echo "make && sudo -E make install"
+$(foreach __p,\
+    __arm__:arm \
+    __i386__:x86-32 \
+    __x86_64__:x86-64 \
+    __mips_n32:mips-n32 \
+    ,$(eval $(call add-objc_msgSend-implementation,$(firstword $(subst :, ,$(__p))),$(lastword $(subst :, ,$(__p))))))
+
+ifeq (,$(filter objc_msgSend.%,$(OBJECTS)))
+OBJECTS += objc_msgSend.noimpl.o
+endif
+
+all: $(LIBOBJC).a $(LIBOBJCXX).so
 
 warning:
 	@echo '********************************************************************************'
@@ -98,49 +102,49 @@ warning:
 	@echo "make && sudo -E make install"
 
 $(LIBOBJCXX).so: $(LIBOBJC).so $(OBJCXX_OBJECTS)
-	$(SILENT)echo Linking shared Objective-C++ runtime library...
+	@echo Linking shared Objective-C++ runtime library...
 	$(SILENT)$(CXX) -shared \
             -Wl,-soname=$(LIBOBJCXX).so $(LDFLAGS) \
             -o $@ $(OBJCXX_OBJECTS) $(SYSLIBS)
 
 $(LIBOBJC).so: $(OBJECTS)
-	$(SILENT)echo Linking shared Objective-C runtime library...
+	@echo Linking shared Objective-C runtime library...
 	$(SILENT)$(CC) -shared -rdynamic \
             -Wl,-soname=$(LIBOBJC).so $(LDFLAGS) \
             -o $@ $(OBJECTS) $(SYSLIBS)
 
 $(LIBOBJC).a: $(OBJECTS)
-	$(SILENT)echo Linking static Objective-C runtime library...
+	@echo Linking static Objective-C runtime library...
 	$(SILENT)$(AR) rcs $@ $(OBJECTS)
 
 .cc.o: Makefile
-	$(SILENT)echo Compiling `basename $<`...
+	@echo Compiling `basename $<`...
 	$(SILENT)$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $< -o $@
 
 .c.o: Makefile
-	$(SILENT)echo Compiling `basename $<`...
+	@echo Compiling `basename $<`...
 	$(SILENT)$(CC) $(CPPFLAGS) $(CFLAGS) -c $< -o $@
 
 .m.o: Makefile
-	$(SILENT)echo Compiling `basename $<`...
-	$(SILENT)$(CC) $(CPPFLAGS) $(CFLAGS) -fobjc-exceptions -c $< -o $@
+	@echo Compiling `basename $<`...
+	$(SILENT)$(CC) $(CPPFLAGS) $(CFLAGS) $(OBJCFLAGS) -c $< -o $@
 
 .S.o: Makefile
-	$(SILENT)echo Assembling `basename $<`...
+	@echo Assembling `basename $<`...
 	$(SILENT)$(CC) $(CPPFLAGS) $(ASMFLAGS) -c $< -o $@
 
 $(INSTALL): all
-	$(SILENT)echo Installing libraries...
+	@echo Installing libraries...
 	$(SILENT)install -d $(LIB_DIR)
-	$(SILENT)install -m 444 $(STRIP) $(LIBOBJC).so $(LIB_DIR)
-	$(SILENT)install -m 444 $(STRIP) $(LIBOBJCXX).so $(LIB_DIR)
-	$(SILENT)install -m 444 $(STRIP) $(LIBOBJC).a $(LIB_DIR)
+	$(SILENT)install -m 444 $(LIBOBJC).so $(LIB_DIR)
+	$(SILENT)install -m 444 $(LIBOBJCXX).so $(LIB_DIR)
+	$(SILENT)install -m 444 $(LIBOBJC).a $(LIB_DIR)
 	$(SILENT)echo Installing headers...
 	$(SILENT)install -d $(HEADER_DIR)/objc
 	$(SILENT)install -m 444 objc/*.h $(HEADER_DIR)/objc
 
 clean:
-	$(SILENT)echo Cleaning...
+	@echo Cleaning...
 	$(SILENT)rm -f $(OBJECTS)
 	$(SILENT)rm -f $(OBJCXX_OBJECTS)
 	$(SILENT)rm -f $(LIBOBJC).so

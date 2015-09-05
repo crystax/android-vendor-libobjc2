@@ -1,3 +1,5 @@
+#include "common.S"
+
 #define DTABLE_OFFSET  64
 #define SMALLOBJ_MASK  7
 #define SHIFT_OFFSET   4
@@ -277,3 +279,7 @@ CDECL(objc_msgSend):
 TYPE_DIRECTIVE(CDECL(objc_msgSend_stret), @function)
 CDECL(objc_msgSend_stret):
 	MSGSEND %rsi, %rdx
+
+#ifdef __ELF__
+.section .note.GNU-stack,"",%progbits
+#endif

@@ -102,12 +102,15 @@ CDECL(__objc_block_trampoline_sret):
 	ldr r1, [pc, #-16]         // Load the block pointer over self
 	ldr pc, [pc, #-24]         // Jump to the block function
 CDECL(__objc_block_trampoline_end_sret):
-#else
-#warning imp_implementationWithBlock() not implemented for your architecture
+#elif __aarch64__
+#warning imp_implementationWithBlock() not implemented for __aarch64__
 CDECL(__objc_block_trampoline):
 CDECL(__objc_block_trampoline_end):
 CDECL(__objc_block_trampoline_sret):
 CDECL(__objc_block_trampoline_end_sret):
+	bl CDECL(abort)
+#else
+#error imp_implementationWithBlock() not implemented for your architecture
 #endif
 #ifdef __ELF__
 .section .note.GNU-stack,"",%progbits

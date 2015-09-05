@@ -1,3 +1,5 @@
+#include "common.S"
+
 .set noreorder
 # Some macros for n32 / n64 compatibility
 #ifdef _ABI64
@@ -214,3 +216,7 @@ CDECL(objc_msgSend):
 TYPE_DIRECTIVE(CDECL(objc_msgSend_stret), @function)
 CDECL(objc_msgSend_stret):
 	MSGSEND $a1, $a2
+
+#ifdef __ELF__
+.section .note.GNU-stack,"",%progbits
+#endif
