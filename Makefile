@@ -104,13 +104,13 @@ warning:
 $(LIBOBJCXX).so: $(LIBOBJC).so $(OBJCXX_OBJECTS)
 	@echo Linking shared Objective-C++ runtime library...
 	$(SILENT)$(CXX) -shared \
-            -Wl,-soname=$(LIBOBJCXX).so $(LDFLAGS) \
+            -Wl,-soname=$(LIBOBJCXX).so -nostdlib $(LDFLAGS) \
             -o $@ $(OBJCXX_OBJECTS) $(SYSLIBS)
 
 $(LIBOBJC).so: $(OBJECTS)
 	@echo Linking shared Objective-C runtime library...
-	$(SILENT)$(CC) -shared -rdynamic \
-            -Wl,-soname=$(LIBOBJC).so $(LDFLAGS) \
+	$(SILENT)$(CC) -shared \
+            -Wl,-soname=$(LIBOBJC).so -nostdlib $(LDFLAGS) \
             -o $@ $(OBJECTS) $(SYSLIBS)
 
 $(LIBOBJC).a: $(OBJECTS)
