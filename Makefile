@@ -42,7 +42,6 @@ OBJCXX_OBJECTS = \
 	objcxx_eh.o
 
 OBJECTS = \
-	NSBlocks.o\
 	Protocol2.o\
 	abi_version.o\
 	alias_table.o\
