@@ -189,10 +189,19 @@ typedef struct
 
 
 #ifndef YES
-#	define YES ((BOOL)1)
+#if __has_feature(objc_bool)
+#define YES __objc_yes
+#else
+#define YES ((BOOL)1)
 #endif
+#endif
+
 #ifndef NO
-#	define NO ((BOOL)0)
+#if __has_feature(objc_bool)
+#define NO __objc_no
+#else
+#define NO ((BOOL)0)
+#endif
 #endif
 
 #ifdef __GNUC
@@ -204,7 +213,7 @@ typedef struct
 #endif
 
 #ifndef nil
-#	define nil ((id)_OBJC_NULL_PTR)
+#	define nil (_OBJC_NULL_PTR)
 #endif
 
 #ifndef Nil
