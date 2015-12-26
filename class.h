@@ -300,7 +300,14 @@ static inline Class classForObject(id obj)
 			return SmallObjectClasses[(addr & OBJC_SMALL_OBJECT_MASK)];
 		}
 	}
+#if __clang__
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-objc-isa-usage"
+#endif
 	return obj->isa;
+#if __clang__
+#pragma clang diagnostic pop
+#endif
 }
 
 #endif //__OBJC_CLASS_H_INCLUDED

@@ -133,7 +133,7 @@
 
 #else
 
-#warning imp_implementationWithBlock() not implemented for your architecture
+#error imp_implementationWithBlock() not implemented for your architecture
 .macro trampoline arg0, arg1
 .endm
 #define ARG0 0

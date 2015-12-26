@@ -228,7 +228,7 @@ static int PREFIX(_table_move_gap)(PREFIX(_table) *table, uint32_t fromHash,
 		// Get the cell n before the hash.
 		PREFIX(_table_cell) cell = PREFIX(_table_lookup)(table, hash);
 		// If this node is a primary entry move it down
-		if (MAP_TABLE_HASH_VALUE(cell->value) == hash)
+		if ((uint32_t)MAP_TABLE_HASH_VALUE(cell->value) == hash)
 		{
 			emptyCell->value = cell->value;
 			cell->secondMaps |= (1 << ((fromHash - hash) - 1));

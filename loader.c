@@ -29,10 +29,12 @@ void objc_send_load_message(Class class);
 
 void log_selector_memory_usage(void);
 
+#if !__ANDROID__
 static void log_memory_stats(void)
 {
 	log_selector_memory_usage();
 }
+#endif /* !__ANDROID__ */
 
 /* Number of threads that are alive.  */
 int __objc_runtime_threads_alive = 1;			/* !T:MUTEX */
@@ -77,10 +79,12 @@ void __objc_exec_class(struct objc_module_abi_8 *module)
 		init_arc();
 		init_trampolines();
 		first_run = NO;
+#if !__ANDROID__
 		if (getenv("LIBOBJC_MEMORY_PROFILE"))
 		{
 			atexit(log_memory_stats);
 		}
+#endif /* !__ANDROID__ */
 		if (dispatch_begin_thread_4GC != 0) {
 			dispatch_begin_thread_4GC = objc_registerThreadWithCollector;
 		}

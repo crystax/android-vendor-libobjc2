@@ -19,6 +19,12 @@ void *objc_valloc(size_t size)
 {
 	return malloc(size);
 }
+#elif __ANDROID__
+#include <unistd.h>
+void *objc_valloc(size_t size)
+{
+	return memalign(sysconf(_SC_PAGESIZE), size);
+}
 #else
 void *objc_valloc(size_t size)
 {

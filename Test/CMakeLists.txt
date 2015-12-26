@@ -32,6 +32,15 @@ set(TESTS
 	MethodArguments.m
 )
 
+if (ANDROID AND CMAKE_C_COMPILER_ID STREQUAL "Clang")
+	# Don't include tests using __thread variables since clang require support from OS level
+	# for thread-local variables, and this is not yet available on Android.
+	list(REMOVE_ITEM TESTS
+		Forward.m
+		msgInterpose.m
+	)
+endif()
+
 # Function for adding a test.  This takes the name of the test and the list of
 # source files as arguments.
 function(addtest_flags TEST_NAME FLAGS TEST_SOURCE)
@@ -42,8 +51,20 @@ function(addtest_flags TEST_NAME FLAGS TEST_SOURCE)
 		# Add the ARC-incompatible definitions of the test class.
 		list(APPEND TEST_SOURCE "Test.m")
 	endif()
+	set(TEST_LAUNCHER)
+	if (ANDROID AND CRYSTAX)
+		list(APPEND TEST_LAUNCHER ${ANDROID_NDK}/tools/adbrunner)
+		list(APPEND TEST_LAUNCHER "--abi=${ANDROID_ABI}")
+		list(APPEND TEST_LAUNCHER "--ld-library-path=$<TARGET_FILE_DIR:objc>")
+		if (CMAKE_POSITION_INDEPENDENT_CODE)
+			list(APPEND TEST_LAUNCHER "--pie")
+		else()
+			list(APPEND TEST_LAUNCHER "--no-pie")
+		endif()
+		list(APPEND TEST_LAUNCHER "--run-on-all-devices")
+	endif()
 	add_executable(${TEST_NAME} ${TEST_SOURCE})
-	add_test(${TEST_NAME} ${TEST_NAME})
+	add_test(NAME ${TEST_NAME} COMMAND ${TEST_LAUNCHER} ${TEST_NAME})
 	set(ARC "")
 	set_target_properties(${TEST_NAME} PROPERTIES
 		INCLUDE_DIRECTORIES "${CMAKE_SOURCE_DIR}"

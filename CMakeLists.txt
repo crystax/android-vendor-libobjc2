@@ -1,8 +1,11 @@
 cmake_minimum_required(VERSION 2.8)
 
+option(WITH_TESTS "Enable building the tests [default: ON]" ON)
 
 project(libobjc)
 enable_language(ASM)
+
+set(CMAKE_MACOSX_RPATH 1)
 
 set(CMAKE_C_FLAGS_DEBUG "-g -O0 -fno-inline ${CMAKE_C_FLAGS_DEBUG}")
 set(CMAKE_C_FLAGS_RELEASE "-O3 ${CMAKE_C_FLAGS_RELEASE}")
@@ -171,17 +174,24 @@ if (ENABLE_OBJCXX)
 	if (NOT CXX_RUNTIME)
 		find_library(CXX_RUNTIME NAMES libsupc++.so)
 	endif (NOT CXX_RUNTIME)
+	if (ANDROID AND CRYSTAX)
+		set(CXX_RUNTIME ${STDCXX_SUPPORT_LIBRARY})
+	endif ()
 
 	# If we have a C++ ABI library, then we can produce a single libobjc that
 	# works for Objective-C and Objective-C++.  If not, then we need to provide
 	# a separate libobjcxx.
 	if (CXX_RUNTIME)
 		message(STATUS "Using ${CXX_RUNTIME} as the C++ runtime library")
-		try_compile( USERUNTIME 
-			"${CMAKE_BINARY_DIR}/CMake"
-			"${CMAKE_SOURCE_DIR}/CMake"
-			test_cxx_runtime
-			CMAKE_FLAGS "-DCXX_RUNTIME=${CXX_RUNTIME}")
+		if (ANDROID AND CRYSTAX)
+			set(USERUNTIME TRUE)
+		else ()
+			try_compile( USERUNTIME 
+				"${CMAKE_BINARY_DIR}/CMake"
+				"${CMAKE_SOURCE_DIR}/CMake"
+				test_cxx_runtime
+				CMAKE_FLAGS "-DCXX_RUNTIME=${CXX_RUNTIME}")
+		endif ()
 		message(STATUS "Is runtime useable? ${USERUNTIME}")
 		if (${FORCE_LIBOBJCXX} OR NOT ${USERUNTIME})
 			message(STATUS "Forcing build of stand-alone libobjcxx")
@@ -264,6 +274,12 @@ if (APPLE)
 	set(CMAKE_CXX_LINK_FLAGS "${CMAKE_CXX_LINK_FLAGS} -Wl,-undefined,dynamic_lookup")
 endif ()
 
+# Copy libcrystax.so if we're building for Android
+if (ANDROID AND CRYSTAX)
+	add_custom_command(TARGET objc PRE_LINK
+		COMMAND ${CMAKE_COMMAND} -E copy_if_different ${LIBCRYSTAX_LIBRARY} $<TARGET_FILE_DIR:objc>)
+endif ()
+
 #
 # Installation
 #
@@ -340,7 +356,7 @@ add_custom_target(uninstall
 	COMMAND ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake)
 
 
-set(TESTS TRUE CACHE BOOL
+set(TESTS ${WITH_TESTS} CACHE BOOL
 	"Enable building the tests")
 
 if (TESTS)

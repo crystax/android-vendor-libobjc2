@@ -33,7 +33,17 @@ void __clear_cache(void* start, void* end);
 #include <nbutil.h>
 #endif
 
+#ifndef PAGE_SIZE
 #define PAGE_SIZE 4096
+#endif
+
+#if __ANDROID__
+#define valloc(sz) myvalloc(sz)
+static void *myvalloc(size_t size)
+{
+    return memalign(sysconf(_SC_PAGESIZE), size);
+}
+#endif /* __ANDROID__ */
 
 struct block_header
 {

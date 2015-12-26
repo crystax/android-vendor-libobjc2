@@ -23,6 +23,11 @@
 @interface __IncompleteProtocol : Protocol2 @end
 @implementation __IncompleteProtocol @end
 
+#ifdef __clang__
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wobjc-root-class"
+#endif
+
 /**
  * This class exists for the sole reason that the legacy GNU ABI did not
  * provide a way of registering protocols with the runtime.  With the new ABI,
@@ -31,6 +36,11 @@
  * protocol at least once and can perform uniquing.
  */
 @interface __ObjC_Protocol_Holder_Ugly_Hack { id isa; } @end
+
+#ifdef __clang__
+#pragma clang diagnostic pop
+#endif
+
 @implementation __ObjC_Protocol_Holder_Ugly_Hack @end
 
 @implementation Object @end
