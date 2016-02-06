@@ -84,6 +84,8 @@
 #define ARG0 $a0
 #define ARG1 $a1
 #define ARG2 $a2
+#define SARG0 ARG0
+#define SARG1 ARG1
 
 #elif defined(__ARM_ARCH_ISA_A64)
 ////////////////////////////////////////////////////////////////////////////////
