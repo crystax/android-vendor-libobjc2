@@ -175,8 +175,8 @@ if (ENABLE_OBJCXX)
 	if (NOT CXX_RUNTIME)
 		find_library(CXX_RUNTIME NAMES libsupc++.so)
 	endif (NOT CXX_RUNTIME)
-	if (ANDROID AND CRYSTAX)
-		set(CXX_RUNTIME ${STDCXX_SUPPORT_LIBRARY})
+	if (ANDROID AND DEFINED ANDROID_LIBSUPCXX_FILE)
+		set(CXX_RUNTIME ${ANDROID_LIBSUPCXX_FILE})
 	endif ()
 
 	# If we have a C++ ABI library, then we can produce a single libobjc that
@@ -276,9 +276,9 @@ if (APPLE)
 endif ()
 
 # Copy libcrystax.so if we're building for Android
-if (ANDROID AND CRYSTAX)
+if (ANDROID AND DEFINED ANDROID_LIBCRYSTAX_FILE)
 	add_custom_command(TARGET objc PRE_LINK
-		COMMAND ${CMAKE_COMMAND} -E copy_if_different ${LIBCRYSTAX_LIBRARY} $<TARGET_FILE_DIR:objc>)
+		COMMAND ${CMAKE_COMMAND} -E copy_if_different ${ANDROID_LIBCRYSTAX_FILE} $<TARGET_FILE_DIR:objc>)
 endif ()
 
 #
