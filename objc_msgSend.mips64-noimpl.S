@@ -1,176 +1,261 @@
-	.file	1 "objc_msgSend.noimpl.c"
-	.section .mdebug.abi64
-	.previous
-	.nan	2008
-	.module	fp=64
-	.module	oddspreg
-	.abicalls
-	.rdata
-	.align	3
-.LC0:
-	.ascii	"%s is not implemented for this target!\012\000"
 	.text
-	.align	2
+	.abicalls
+	.section	.mdebug.abi64,"",@progbits
+	.nan	2008
+	.file	"objc_msgSend.noimpl.c"
+	.section	.text.objc_msgSend,"ax",@progbits
 	.globl	objc_msgSend
-	.set	nomips16
+	.align	3
+	.type	objc_msgSend,@function
 	.set	nomicromips
+	.set	nomips16
 	.ent	objc_msgSend
-	.type	objc_msgSend, @function
-objc_msgSend:
-	.frame	$fp,96,$31		# vars= 16, regs= 3/0, args= 0, gp= 0
-	.mask	0xd0000000,-56
-	.fmask	0x00000000,0
+objc_msgSend:                           # @objc_msgSend
+	.cfi_startproc
+	.frame	$fp,144,$ra
+	.mask 	0x00000000,0
+	.fmask	0xd0000000,-4
 	.set	noreorder
 	.set	nomacro
-	daddiu	$sp,$sp,-96
-	sd	$31,40($sp)
-	sd	$fp,32($sp)
-	sd	$28,24($sp)
-	move	$fp,$sp
-	lui	$28,%hi(%neg(%gp_rel(objc_msgSend)))
-	daddu	$28,$28,$25
-	daddiu	$28,$28,%lo(%neg(%gp_rel(objc_msgSend)))
-	sd	$4,0($fp)
-	sd	$5,8($fp)
-	sd	$6,48($fp)
-	sd	$7,56($fp)
-	sd	$8,64($fp)
-	sd	$9,72($fp)
-	sd	$10,80($fp)
-	sd	$11,88($fp)
-	ld	$2,%got_disp(__stderrp)($28)
-	ld	$3,0($2)
-	ld	$2,%got_page(__FUNCTION__.3570)($28)
-	daddiu	$6,$2,%got_ofst(__FUNCTION__.3570)
-	ld	$2,%got_page(.LC0)($28)
-	daddiu	$5,$2,%got_ofst(.LC0)
-	move	$4,$3
-	ld	$2,%call16(fprintf)($28)
-	move	$25,$2
+	.set	noat
+# BB#0:                                 # %entry
+	daddiu	$sp, $sp, -144
+$tmp0:
+	.cfi_def_cfa_offset 144
+	sd	$ra, 88($sp)            # 8-byte Folded Spill
+	sd	$fp, 80($sp)            # 8-byte Folded Spill
+	sd	$gp, 72($sp)            # 8-byte Folded Spill
+$tmp1:
+	.cfi_offset 31, -56
+$tmp2:
+	.cfi_offset 30, -64
+$tmp3:
+	.cfi_offset 28, -72
+	move	 $fp, $sp
+$tmp4:
+	.cfi_def_cfa_register 30
+	lui	$1, %hi(%neg(%gp_rel(objc_msgSend)))
+	daddu	$1, $1, $25
+	daddiu	$1, $1, %lo(%neg(%gp_rel(objc_msgSend)))
+	sd	$11, 136($fp)
+	sd	$10, 128($fp)
+	sd	$9, 120($fp)
+	sd	$8, 112($fp)
+	sd	$7, 104($fp)
+	sd	$6, 96($fp)
+	sd	$4, 56($fp)
+	sd	$5, 48($fp)
+	ld	$6, %got_disp(__stderrp)($1)
+	ld	$6, 0($6)
+	ld	$7, %got_page($.str)($1)
+	daddiu	$7, $7, %got_ofst($.str)
+	ld	$8, %got_page($__FUNCTION__.objc_msgSend)($1)
+	daddiu	$8, $8, %got_ofst($__FUNCTION__.objc_msgSend)
+	ld	$25, %call16(fprintf)($1)
+	sd	$4, 40($fp)             # 8-byte Folded Spill
+	move	 $4, $6
+	sd	$5, 32($fp)             # 8-byte Folded Spill
+	move	 $5, $7
+	move	 $6, $8
+	move	 $gp, $1
+	sd	$1, 24($fp)             # 8-byte Folded Spill
 	jalr	$25
 	nop
-
-	ld	$2,%call16(abort)($28)
-	move	$25,$2
+	ld	$1, 24($fp)             # 8-byte Folded Reload
+	ld	$25, %call16(abort)($1)
+	move	 $gp, $1
+	sw	$2, 20($fp)             # 4-byte Folded Spill
 	jalr	$25
 	nop
-
+	ld	$1, 32($fp)             # 8-byte Folded Reload
+	ld	$4, 40($fp)             # 8-byte Folded Reload
+	sd	$1, 8($fp)              # 8-byte Folded Spill
+	sd	$4, 0($fp)              # 8-byte Folded Spill
+	.set	at
 	.set	macro
 	.set	reorder
 	.end	objc_msgSend
-	.size	objc_msgSend, .-objc_msgSend
-	.align	2
+$tmp5:
+	.size	objc_msgSend, ($tmp5)-objc_msgSend
+	.cfi_endproc
+
+	.section	.text.objc_msgSend_fpret,"ax",@progbits
 	.globl	objc_msgSend_fpret
-	.set	nomips16
+	.align	3
+	.type	objc_msgSend_fpret,@function
 	.set	nomicromips
+	.set	nomips16
 	.ent	objc_msgSend_fpret
-	.type	objc_msgSend_fpret, @function
-objc_msgSend_fpret:
-	.frame	$fp,96,$31		# vars= 16, regs= 3/0, args= 0, gp= 0
-	.mask	0xd0000000,-56
-	.fmask	0x00000000,0
+objc_msgSend_fpret:                     # @objc_msgSend_fpret
+	.cfi_startproc
+	.frame	$fp,160,$ra
+	.mask 	0x00000000,0
+	.fmask	0xd0000000,-4
 	.set	noreorder
 	.set	nomacro
-	daddiu	$sp,$sp,-96
-	sd	$31,40($sp)
-	sd	$fp,32($sp)
-	sd	$28,24($sp)
-	move	$fp,$sp
-	lui	$28,%hi(%neg(%gp_rel(objc_msgSend_fpret)))
-	daddu	$28,$28,$25
-	daddiu	$28,$28,%lo(%neg(%gp_rel(objc_msgSend_fpret)))
-	sd	$4,0($fp)
-	sd	$5,8($fp)
-	sd	$6,48($fp)
-	sd	$7,56($fp)
-	sd	$8,64($fp)
-	sd	$9,72($fp)
-	sd	$10,80($fp)
-	sd	$11,88($fp)
-	ld	$2,%got_disp(__stderrp)($28)
-	ld	$3,0($2)
-	ld	$2,%got_page(__FUNCTION__.3575)($28)
-	daddiu	$6,$2,%got_ofst(__FUNCTION__.3575)
-	ld	$2,%got_page(.LC0)($28)
-	daddiu	$5,$2,%got_ofst(.LC0)
-	move	$4,$3
-	ld	$2,%call16(fprintf)($28)
-	move	$25,$2
+	.set	noat
+# BB#0:                                 # %entry
+	daddiu	$sp, $sp, -160
+$tmp6:
+	.cfi_def_cfa_offset 160
+	sd	$ra, 104($sp)           # 8-byte Folded Spill
+	sd	$fp, 96($sp)            # 8-byte Folded Spill
+	sd	$gp, 88($sp)            # 8-byte Folded Spill
+$tmp7:
+	.cfi_offset 31, -56
+$tmp8:
+	.cfi_offset 30, -64
+$tmp9:
+	.cfi_offset 28, -72
+	move	 $fp, $sp
+$tmp10:
+	.cfi_def_cfa_register 30
+	lui	$1, %hi(%neg(%gp_rel(objc_msgSend_fpret)))
+	daddu	$1, $1, $25
+	daddiu	$1, $1, %lo(%neg(%gp_rel(objc_msgSend_fpret)))
+	sd	$11, 152($fp)
+	sd	$10, 144($fp)
+	sd	$9, 136($fp)
+	sd	$8, 128($fp)
+	sd	$7, 120($fp)
+	sd	$6, 112($fp)
+	sd	$4, 56($fp)
+	sd	$5, 48($fp)
+	ld	$6, %got_disp(__stderrp)($1)
+	ld	$6, 0($6)
+	ld	$7, %got_page($.str)($1)
+	daddiu	$7, $7, %got_ofst($.str)
+	ld	$8, %got_page($__FUNCTION__.objc_msgSend_fpret)($1)
+	daddiu	$8, $8, %got_ofst($__FUNCTION__.objc_msgSend_fpret)
+	ld	$25, %call16(fprintf)($1)
+	sd	$4, 40($fp)             # 8-byte Folded Spill
+	move	 $4, $6
+	sd	$5, 32($fp)             # 8-byte Folded Spill
+	move	 $5, $7
+	move	 $6, $8
+	move	 $gp, $1
+	sd	$1, 24($fp)             # 8-byte Folded Spill
 	jalr	$25
 	nop
-
-	ld	$2,%call16(abort)($28)
-	move	$25,$2
+	ld	$1, 24($fp)             # 8-byte Folded Reload
+	ld	$25, %call16(abort)($1)
+	move	 $gp, $1
+	sw	$2, 20($fp)             # 4-byte Folded Spill
 	jalr	$25
 	nop
-
+	ld	$1, 32($fp)             # 8-byte Folded Reload
+	ld	$4, 40($fp)             # 8-byte Folded Reload
+	sd	$1, 8($fp)              # 8-byte Folded Spill
+	sd	$4, 0($fp)              # 8-byte Folded Spill
+	.set	at
 	.set	macro
 	.set	reorder
 	.end	objc_msgSend_fpret
-	.size	objc_msgSend_fpret, .-objc_msgSend_fpret
-	.align	2
+$tmp11:
+	.size	objc_msgSend_fpret, ($tmp11)-objc_msgSend_fpret
+	.cfi_endproc
+
+	.section	.text.objc_msgSend_stret,"ax",@progbits
 	.globl	objc_msgSend_stret
-	.set	nomips16
+	.align	3
+	.type	objc_msgSend_stret,@function
 	.set	nomicromips
+	.set	nomips16
 	.ent	objc_msgSend_stret
-	.type	objc_msgSend_stret, @function
-objc_msgSend_stret:
-	.frame	$fp,96,$31		# vars= 16, regs= 3/0, args= 0, gp= 0
-	.mask	0xd0000000,-56
-	.fmask	0x00000000,0
+objc_msgSend_stret:                     # @objc_msgSend_stret
+	.cfi_startproc
+	.frame	$fp,144,$ra
+	.mask 	0x00000000,0
+	.fmask	0xd0000000,-4
 	.set	noreorder
 	.set	nomacro
-	daddiu	$sp,$sp,-96
-	sd	$31,40($sp)
-	sd	$fp,32($sp)
-	sd	$28,24($sp)
-	move	$fp,$sp
-	lui	$28,%hi(%neg(%gp_rel(objc_msgSend_stret)))
-	daddu	$28,$28,$25
-	daddiu	$28,$28,%lo(%neg(%gp_rel(objc_msgSend_stret)))
-	sd	$4,0($fp)
-	sd	$5,8($fp)
-	sd	$6,48($fp)
-	sd	$7,56($fp)
-	sd	$8,64($fp)
-	sd	$9,72($fp)
-	sd	$10,80($fp)
-	sd	$11,88($fp)
-	ld	$2,%got_disp(__stderrp)($28)
-	ld	$3,0($2)
-	ld	$2,%got_page(__FUNCTION__.3580)($28)
-	daddiu	$6,$2,%got_ofst(__FUNCTION__.3580)
-	ld	$2,%got_page(.LC0)($28)
-	daddiu	$5,$2,%got_ofst(.LC0)
-	move	$4,$3
-	ld	$2,%call16(fprintf)($28)
-	move	$25,$2
+	.set	noat
+# BB#0:                                 # %entry
+	daddiu	$sp, $sp, -144
+$tmp12:
+	.cfi_def_cfa_offset 144
+	sd	$ra, 88($sp)            # 8-byte Folded Spill
+	sd	$fp, 80($sp)            # 8-byte Folded Spill
+	sd	$gp, 72($sp)            # 8-byte Folded Spill
+$tmp13:
+	.cfi_offset 31, -56
+$tmp14:
+	.cfi_offset 30, -64
+$tmp15:
+	.cfi_offset 28, -72
+	move	 $fp, $sp
+$tmp16:
+	.cfi_def_cfa_register 30
+	lui	$1, %hi(%neg(%gp_rel(objc_msgSend_stret)))
+	daddu	$1, $1, $25
+	daddiu	$1, $1, %lo(%neg(%gp_rel(objc_msgSend_stret)))
+	sd	$11, 136($fp)
+	sd	$10, 128($fp)
+	sd	$9, 120($fp)
+	sd	$8, 112($fp)
+	sd	$7, 104($fp)
+	sd	$6, 96($fp)
+	sd	$4, 64($fp)
+	sd	$5, 56($fp)
+	ld	$6, %got_disp(__stderrp)($1)
+	ld	$6, 0($6)
+	ld	$7, %got_page($.str)($1)
+	daddiu	$7, $7, %got_ofst($.str)
+	ld	$8, %got_page($__FUNCTION__.objc_msgSend_stret)($1)
+	daddiu	$8, $8, %got_ofst($__FUNCTION__.objc_msgSend_stret)
+	ld	$25, %call16(fprintf)($1)
+	sd	$4, 48($fp)             # 8-byte Folded Spill
+	move	 $4, $6
+	sd	$5, 40($fp)             # 8-byte Folded Spill
+	move	 $5, $7
+	move	 $6, $8
+	move	 $gp, $1
+	sd	$1, 32($fp)             # 8-byte Folded Spill
 	jalr	$25
 	nop
-
-	ld	$2,%call16(abort)($28)
-	move	$25,$2
+	ld	$1, 32($fp)             # 8-byte Folded Reload
+	ld	$25, %call16(abort)($1)
+	move	 $gp, $1
+	sw	$2, 28($fp)             # 4-byte Folded Spill
 	jalr	$25
 	nop
-
+	ld	$1, 40($fp)             # 8-byte Folded Reload
+	ld	$4, 48($fp)             # 8-byte Folded Reload
+	sd	$1, 16($fp)             # 8-byte Folded Spill
+	sd	$4, 8($fp)              # 8-byte Folded Spill
+	.set	at
 	.set	macro
 	.set	reorder
 	.end	objc_msgSend_stret
-	.size	objc_msgSend_stret, .-objc_msgSend_stret
-	.rdata
-	.align	3
-	.type	__FUNCTION__.3570, @object
-	.size	__FUNCTION__.3570, 13
-__FUNCTION__.3570:
-	.ascii	"objc_msgSend\000"
-	.align	3
-	.type	__FUNCTION__.3575, @object
-	.size	__FUNCTION__.3575, 19
-__FUNCTION__.3575:
-	.ascii	"objc_msgSend_fpret\000"
-	.align	3
-	.type	__FUNCTION__.3580, @object
-	.size	__FUNCTION__.3580, 19
-__FUNCTION__.3580:
-	.ascii	"objc_msgSend_stret\000"
-	.ident	"GCC: (GNU) 5.3 20151204"
+$tmp17:
+	.size	objc_msgSend_stret, ($tmp17)-objc_msgSend_stret
+	.cfi_endproc
+
+	.type	$.str,@object           # @.str
+	.section	".rodata.$.str","aMS",@progbits,1
+$.str:
+	.asciz	"%s is not implemented for this target!\n"
+	.size	$.str, 40
+
+	.type	$__FUNCTION__.objc_msgSend,@object # @__FUNCTION__.objc_msgSend
+	.section	".rodata.$__FUNCTION__.objc_msgSend","aMS",@progbits,1
+$__FUNCTION__.objc_msgSend:
+	.asciz	"objc_msgSend"
+	.size	$__FUNCTION__.objc_msgSend, 13
+
+	.type	$__FUNCTION__.objc_msgSend_fpret,@object # @__FUNCTION__.objc_msgSend_fpret
+	.section	".rodata.$__FUNCTION__.objc_msgSend_fpret","aMS",@progbits,1
+$__FUNCTION__.objc_msgSend_fpret:
+	.asciz	"objc_msgSend_fpret"
+	.size	$__FUNCTION__.objc_msgSend_fpret, 19
+
+	.type	$__FUNCTION__.objc_msgSend_stret,@object # @__FUNCTION__.objc_msgSend_stret
+	.section	".rodata.$__FUNCTION__.objc_msgSend_stret","aMS",@progbits,1
+$__FUNCTION__.objc_msgSend_stret:
+	.asciz	"objc_msgSend_stret"
+	.size	$__FUNCTION__.objc_msgSend_stret, 19
+
+
+	.ident	"clang version 3.6 "
+	.section	".note.GNU-stack","",@progbits
+	.text

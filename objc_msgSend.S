@@ -6,12 +6,10 @@
 #include "objc_msgSend.x86-32.S"
 #elif __arm__
 #include "objc_msgSend.arm.S"
-#elif defined(__ARM_ARCH_ISA_A64) && !defined(__ANDROID__)
+#elif defined(__ARM_ARCH_ISA_A64)
 #include "objc_msgSend.aarch64.S"
-#elif defined(__mips_n64) || defined(__mips_n32)
+#elif (defined(__mips_n64) || defined(__mips_n32)) && !defined(__ANDROID__)
 #include "objc_msgSend.mips.S"
-#elif defined(__ANDROID__) && defined(__aarch64__)
-#include "objc_msgSend.aarch64-noimpl.S"
 #elif defined(__ANDROID__) && defined(__mips__) && !defined(__mips64)
 #include "objc_msgSend.mips-noimpl.S"
 #elif defined(__ANDROID__) && defined(__mips__) && defined(__mips64)
