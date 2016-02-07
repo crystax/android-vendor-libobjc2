@@ -52,7 +52,7 @@ endef
 #========================================================================================
 
 .PHONY: all
-all: build install
+all: build
 
 .PHONY: rebuild
 rebuild:
