@@ -2,7 +2,7 @@ override MYDIR := $(abspath $(dir $(lastword $(MAKEFILE_LIST))))
 override TOPDIR := $(abspath $(MYDIR)/..)
 
 ABI ?= armeabi armeabi-v7a armeabi-v7a-hard x86 mips arm64-v8a x86_64 mips64
-TOOLCHAIN_VERSION ?= clang3.6
+TOOLCHAIN_VERSION ?= clang3.7
 WITH_TESTS ?= yes
 
 #========================================================================================

@@ -32,9 +32,10 @@ set(TESTS
 	MethodArguments.m
 )
 
-if (ANDROID AND CMAKE_C_COMPILER_ID STREQUAL "Clang")
-	# Don't include tests using __thread variables since clang require support from OS level
-	# for thread-local variables, and this is not yet available on Android.
+if (ANDROID AND ANDROID_TOOLCHAIN_NAME MATCHES "clang3\\.6$")
+	# Don't include tests using __thread variables since clang-3.6 doesn't support
+	# emulated TLS (thread-local storage). It appears first in clang-3.8, was also
+	# backported to clang-3.7.
 	list(REMOVE_ITEM TESTS
 		Forward.m
 		msgInterpose.m
