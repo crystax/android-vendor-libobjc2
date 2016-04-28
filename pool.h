@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <limits.h>
 #include "lock.h"
 
 #ifndef POOL_TYPE
@@ -12,10 +13,6 @@
 #define REALLY_PREFIX_SUFFIX(x,y) x ## y
 #define PREFIX_SUFFIX(x, y) REALLY_PREFIX_SUFFIX(x, y)
 #define NAME(x) PREFIX_SUFFIX(POOL_NAME, x)
-
-#ifndef PAGE_SIZE
-#define PAGE_SIZE 4096
-#endif
 
 // Malloc one page at a time.
 #define POOL_SIZE ((PAGE_SIZE) / sizeof(POOL_TYPE))
@@ -49,7 +46,6 @@ static inline POOL_TYPE*NAME(_pool_alloc)(void)
 }
 #undef NAME
 #undef POOL_SIZE
-#undef PAGE_SIZE
 #undef POOL_NAME
 #undef POOL_TYPE
 #undef LOCK_POOL
